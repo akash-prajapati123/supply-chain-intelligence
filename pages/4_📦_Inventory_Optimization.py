@@ -55,20 +55,27 @@ display_cols = [
 ]
 existing_cols = [c for c in display_cols if c in results.columns]
 
-styled = results[existing_cols].style.format({
-    "avg_daily_demand": "{:.1f}",
-    "demand_cv": "{:.1f}",
-    "annual_demand": "{:,.0f}",
-    "eoq": "{:,.0f}",
-    "total_orders": "{:,}",
-    "safety_stock_95": "{:,.0f}",
-    "reorder_point_95": "{:,.0f}",
-    "safety_stock_99": "{:,.0f}",
-    "reorder_point_99": "{:,.0f}",
-    "avg_lead_time": "{:.1f}",
-    "late_delivery_rate": "{:.1f}%",
-}).background_gradient(subset=["late_delivery_rate"], cmap="YlOrRd"
-).background_gradient(subset=["demand_cv"], cmap="YlOrRd")
+format_dict = {
+    col: fmt for col, fmt in {
+        "avg_daily_demand": "{:.1f}",
+        "demand_cv": "{:.1f}",
+        "annual_demand": "{:,.0f}",
+        "eoq": "{:,.0f}",
+        "total_orders": "{:,}",
+        "safety_stock_95": "{:,.0f}",
+        "reorder_point_95": "{:,.0f}",
+        "safety_stock_99": "{:,.0f}",
+        "reorder_point_99": "{:,.0f}",
+        "avg_lead_time": "{:.1f}",
+        "late_delivery_rate": "{:.1f}",
+    }.items() if col in existing_cols
+}
+
+styled = results[existing_cols].style.format(format_dict)
+if "late_delivery_rate" in existing_cols:
+    styled = styled.background_gradient(subset=["late_delivery_rate"], cmap="YlOrRd")
+if "demand_cv" in existing_cols:
+    styled = styled.background_gradient(subset=["demand_cv"], cmap="YlOrRd")
 
 st.dataframe(styled, use_container_width=True, height=400)
 

@@ -130,8 +130,8 @@ display_cols = [
 ]
 existing_cols = [c for c in display_cols if c in scores.columns]
 
-st.dataframe(
-    scores[existing_cols].style.format({
+format_dict = {
+    col: fmt for col, fmt in {
         "overall_score": "{:.3f}",
         "delivery_performance": "{:.2f}",
         "profitability": "{:.2f}",
@@ -141,7 +141,17 @@ st.dataframe(
         "product_diversity": "{:.2f}",
         "total_orders": "{:,.0f}",
         "total_revenue": "${:,.0f}",
-    }).background_gradient(subset=["overall_score"], cmap="RdYlGn"),
+    }.items() if col in existing_cols
+}
+
+leaderboard_styled = scores[existing_cols].style.format(format_dict)
+if "overall_score" in existing_cols:
+    leaderboard_styled = leaderboard_styled.background_gradient(
+        subset=["overall_score"], cmap="RdYlGn"
+    )
+
+st.dataframe(
+    leaderboard_styled,
     use_container_width=True,
     height=500,
 )

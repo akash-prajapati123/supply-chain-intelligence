@@ -325,7 +325,7 @@ def supplier_comparison(scores_df: pd.DataFrame) -> go.Figure:
                   annotation_text="Good (0.7)")
     fig.add_hline(y=0.5, line_dash="dash", line_color=COLORS["warning"],
                   annotation_text="Acceptable (0.5)")
-    return _apply_layout(fig, "🏆 Supplier Score Comparison", height=450)
+    return _apply_layout(fig, "🏆 Department Score Comparison", height=450)
 
 
 def inventory_status(inv_df: pd.DataFrame) -> go.Figure:
@@ -363,7 +363,8 @@ def inventory_status(inv_df: pd.DataFrame) -> go.Figure:
         ],
     ), row=1, col=2)
 
-    return _apply_layout(fig, "📦 Inventory Optimization Status", height=450)
+    fig.update_xaxes(tickangle=45)
+    return _apply_layout(fig, "📦 Inventory Optimization Status", height=550)
 
 
 def roc_curve_chart(y_test, y_prob) -> go.Figure:
